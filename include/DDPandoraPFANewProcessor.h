@@ -54,6 +54,8 @@ public:
 
         FloatVector     m_inputEnergyCorrectionPoints{};    ///< The input energy points for non-linearity energy correction
         FloatVector     m_outputEnergyCorrectionPoints{};   ///< The output energy points for non-linearity energy correction
+
+        bool m_useAPRIL = false; ///< Choose if we want to use APRIL instead of Pandora for the reconstruction
         
         // Software compensation parameters
         FloatVector     m_softCompParameters{};
