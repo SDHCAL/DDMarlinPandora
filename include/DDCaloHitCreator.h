@@ -119,6 +119,7 @@ public:
         bool                          m_useSystemId;                      ///< flag whether to use systemId or not to identify origin of the CaloHit
         int                           m_ecalBarrelSystemId;               ///< systemId of ECal Barrel
         int                           m_hcalBarrelSystemId;               ///< systemId of HCal Barrel
+        bool m_useAPRIL = false; ///< Choose if we want to use APRIL instead of Pandora for the reconstruction
 
     public:
       FloatVector m_eCalBarrelNormalVector;
@@ -140,12 +141,14 @@ public:
      *  @brief  Destructor
      */
     virtual ~DDCaloHitCreator();
+    virtual ~DDCaloHitCreator();
 
     /**
      *  @brief  Create calo hits
      * 
      *  @param  pLCEvent the lcio event
      */    
+    virtual pandora::StatusCode CreateCaloHits(const EVENT::LCEvent *const pLCEvent);
     virtual pandora::StatusCode CreateCaloHits(const EVENT::LCEvent *const pLCEvent);
 
     /**
@@ -159,6 +162,13 @@ public:
      *  @brief  Reset the calo hit creator
      */
     void Reset();
+
+    /**
+     *  @brief  Disallow copying
+     */
+    DDCaloHitCreator& operator=(const DDCaloHitCreator&) = delete;
+    DDCaloHitCreator(const DDCaloHitCreator&) = delete;
+
 
 protected:
     /**
@@ -202,6 +212,7 @@ protected:
      *  @param  pCaloHit the lcio calorimeter hit
      *  @param  caloHitParameters the calo hit parameters to populate
      */
+    virtual void GetCommonCaloHitProperties(const EVENT::CalorimeterHit *const pCaloHit, PandoraApi::CaloHit::Parameters &caloHitParameters) const;
     virtual void GetCommonCaloHitProperties(const EVENT::CalorimeterHit *const pCaloHit, PandoraApi::CaloHit::Parameters &caloHitParameters) const;
 
     /**
@@ -260,11 +271,9 @@ protected:
     CalorimeterHitVector                m_calorimeterHitVector;             ///< The calorimeter hit vector
 
     dd4hep::VolumeManager m_volumeManager; ///< DD4hep volume manager
-    
-#ifdef APRILCONTENT
-	static april_content::CaloHitFactory      m_pCaloHitFactory;            ///< The calo hit factory used for april calo hit creation
-#endif
-    
+
+    //Added by T.Pasquier
+    std::unique_ptr<pandora::ObjectFactory<object_creation::CaloHit::Parameters, object_creation::CaloHit::Object>> m_caloHitFactory{nullptr}; //General factory to initialize
 
 };
 
