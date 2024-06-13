@@ -162,6 +162,7 @@ private:
      */
     void Reset();
 
+
     pandora::Pandora                     *m_pPandora = NULL;                  ///< Address of the pandora instance
     DDCaloHitCreator                     *m_pCaloHitCreator = NULL;           ///< The calo hit creator
     DDGeometryCreator                    *m_pGeometryCreator = NULL;          ///< The geometry creator
@@ -186,5 +187,12 @@ inline marlin::Processor *DDPandoraPFANewProcessor::newProcessor()
 {
     return new DDPandoraPFANewProcessor;
 }
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+/**
+*  @brief  Register the LCContent plugins outside their original function
+*/
+pandora::StatusCode PandoraHack(const pandora::Pandora &pandora);
 
 #endif // #ifndef DDPANDORAPFANEWPROCESSOR_H
