@@ -22,6 +22,8 @@
 
 #include <Pandora/PandoraObjectFactories.h>
 
+#include <memory>
+
 
 typedef std::vector<EVENT::CalorimeterHit *> CalorimeterHitVector;
 
@@ -268,18 +270,12 @@ protected:
     CalorimeterHitVector                m_calorimeterHitVector;             ///< The calorimeter hit vector
 
     dd4hep::VolumeManager m_volumeManager; ///< DD4hep volume manager
-    
-#ifdef APRILCONTENT
-	static april_content::CaloHitFactory      m_pAPRILCaloHitFactory;            ///< The calo hit factory used for april calo hit creation. Added by T.Pasquier
-#endif
 
     //Added by T.Pasquier
-    pandora::ObjectFactory<object_creation::CaloHit::Parameters, object_creation::CaloHit::Object>* caloHitFactory; //General factory to initialize
+    std::unique_ptr<pandora::ObjectFactory<object_creation::CaloHit::Parameters, object_creation::CaloHit::Object>> m_caloHitFactory{nullptr}; //General factory to initialize
 
-    pandora::PandoraObjectFactory<object_creation::CaloHit::Parameters, object_creation::CaloHit::Object> DefaultCaloFactory; //Pandora default factory
-
-    DDCaloHitCreator& operator=(const DDCaloHitCreator&) = delete;  // Disallow copying
-    DDCaloHitCreator(const DDCaloHitCreator&) = delete;
+    /* DDCaloHitCreator& operator=(const DDCaloHitCreator&) = delete;  // Disallow copying
+    DDCaloHitCreator(const DDCaloHitCreator&) = delete; */
 
 };
 
