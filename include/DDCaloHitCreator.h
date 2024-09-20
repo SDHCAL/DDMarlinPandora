@@ -21,6 +21,8 @@
 #include <DD4hep/DetElement.h>
 
 
+#include <memory>
+
 
 typedef std::vector<EVENT::CalorimeterHit *> CalorimeterHitVector;
 
