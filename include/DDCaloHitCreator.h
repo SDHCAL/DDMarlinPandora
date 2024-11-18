@@ -161,6 +161,13 @@ public:
      */
     void Reset();
 
+    /**
+     *  @brief  Disallow copying
+     */
+    DDCaloHitCreator& operator=(const DDCaloHitCreator&) = delete;
+    DDCaloHitCreator(const DDCaloHitCreator&) = delete;
+
+
 protected:
     /**
      *  @brief  Create ecal calo hits
@@ -261,11 +268,9 @@ protected:
     CalorimeterHitVector                m_calorimeterHitVector;             ///< The calorimeter hit vector
 
     dd4hep::VolumeManager m_volumeManager; ///< DD4hep volume manager
-    
-#ifdef APRILCONTENT
-	static april_content::CaloHitFactory      m_pCaloHitFactory;            ///< The calo hit factory used for april calo hit creation
-#endif
-    
+
+    //Added by T.Pasquier
+    std::unique_ptr<pandora::ObjectFactory<object_creation::CaloHit::Parameters, object_creation::CaloHit::Object>> m_caloHitFactory{nullptr}; //General factory to initialize
 
 };
 
