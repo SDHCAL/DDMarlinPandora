@@ -38,6 +38,9 @@ namespace april_content { class CaloHitFactory; }
 class DDCaloHitCreator
 {
 public:
+    // give access to the private memebers from DDCaloHitCreatorALLEGRO
+    friend class DDCaloHitCreatorALLEGRO;
+
     typedef std::vector<std::string> StringVector;
     typedef std::vector<float> FloatVector;
 
