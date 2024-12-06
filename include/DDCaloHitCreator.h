@@ -122,7 +122,13 @@ public:
         float                         m_hCalBarrelOuterPhi0;              ///< HCal barrel outer phi0 coordinate
         unsigned int                  m_hCalBarrelOuterSymmetry;          ///< HCal barrel outer symmetry order
 
+<<<<<<< HEAD
         bool m_useAPRIL = false; ///< Choose if we want to use APRIL instead of Pandora for the reconstruction
+=======
+        bool                          m_useSystemId;                      ///< flag whether to use systemId or not to identify origin of the CaloHit
+        int                           m_ecalBarrelSystemId;               ///< systemId of ECal Barrel
+        int                           m_hcalBarrelSystemId;               ///< systemId of HCal Barrel
+>>>>>>> b17b9c3 (cleaning some duplicate codes for ALLEGRO)
 
     public:
       FloatVector m_eCalBarrelNormalVector;
