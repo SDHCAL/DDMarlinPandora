@@ -20,9 +20,6 @@
 #include <DD4hep/Detector.h>
 #include <DD4hep/DetElement.h>
 
-#include <Pandora/PandoraObjectFactories.h>
-
-#include <memory>
 
 
 typedef std::vector<EVENT::CalorimeterHit *> CalorimeterHitVector;
@@ -120,6 +117,7 @@ public:
         unsigned int                  m_hCalBarrelOuterSymmetry;          ///< HCal barrel outer symmetry order
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         bool                          m_useSystemId;                      ///< flag whether to use systemId or not to identify origin of the CaloHit
         int                           m_ecalBarrelSystemId;               ///< systemId of ECal Barrel
         int                           m_hcalBarrelSystemId;               ///< systemId of HCal Barrel
@@ -128,10 +126,12 @@ public:
 >>>>>>> 7841d7e (cleaning some duplicate codes for ALLEGRO)
         bool m_useAPRIL = false; ///< Choose if we want to use APRIL instead of Pandora for the reconstruction
 =======
+=======
+>>>>>>> 788a724 (removing friend classes for ALLEGRO)
         bool                          m_useSystemId;                      ///< flag whether to use systemId or not to identify origin of the CaloHit
         int                           m_ecalBarrelSystemId;               ///< systemId of ECal Barrel
         int                           m_hcalBarrelSystemId;               ///< systemId of HCal Barrel
->>>>>>> b17b9c3 (cleaning some duplicate codes for ALLEGRO)
+        bool m_useAPRIL = false; ///< Choose if we want to use APRIL instead of Pandora for the reconstruction
 
     public:
       FloatVector m_eCalBarrelNormalVector;
@@ -178,7 +178,6 @@ public:
      */
     DDCaloHitCreator& operator=(const DDCaloHitCreator&) = delete;
     DDCaloHitCreator(const DDCaloHitCreator&) = delete;
-
 
 protected:
     /**
@@ -270,12 +269,6 @@ protected:
      */
     float GetMaximumRadius(const EVENT::CalorimeterHit *const pCaloHit, const unsigned int symmetryOrder, const float phi0) const;
 
-    /**
-     *  @brief  Initialize the factory for calo hit creation
-     * 
-     */
-    void ChooseFactory();
-
     const Settings                      m_settings;                         ///< The calo hit creator settings
 
     const pandora::Pandora &            m_pandora;                          ///< Reference to the pandora object to create calo hits
@@ -286,9 +279,11 @@ protected:
     CalorimeterHitVector                m_calorimeterHitVector;             ///< The calorimeter hit vector
 
     dd4hep::VolumeManager m_volumeManager; ///< DD4hep volume manager
-
-    //Added by T.Pasquier
-    std::unique_ptr<pandora::ObjectFactory<object_creation::CaloHit::Parameters, object_creation::CaloHit::Object>> m_caloHitFactory{nullptr}; //General factory to initialize
+    
+#ifdef APRILCONTENT
+	static april_content::CaloHitFactory      m_pCaloHitFactory;            ///< The calo hit factory used for april calo hit creation
+#endif
+    
 
 };
 
