@@ -28,6 +28,17 @@
 
 //forward declarations. See in DDPandoraPFANewProcessor.cc
 
+static const double staveNormals[8][3] = {
+    { -std::sqrt(2)/2,  std::sqrt(2)/2, 0.0 }, // Stave 0
+    { -1.0,                 0.0,                0.0 }, // Stave 1
+    { -std::sqrt(2)/2,  -std::sqrt(2)/2, 0.0 }, // Stave 2
+    {  0.0,                -1.0,                0.0 }, // Stave 3
+    { std::sqrt(2)/2,  -std::sqrt(2)/2, 0.0 }, // Stave 4
+    { +1.0,                 0.0,                0.0 }, // Stave 5
+    { std::sqrt(2)/2,  std::sqrt(2)/2, 0.0 }, // Stave 6
+    {  0.0,                +1.0,                0.0 }  // Stave 7
+};
+
 // dd4hep::rec::LayeredCalorimeterData * getExtension(std::string detectorName);
 dd4hep::rec::LayeredCalorimeterData * getExtension(unsigned int includeFlag, unsigned int excludeFlag=0);
 
@@ -726,6 +737,25 @@ void DDCaloHitCreator::GetBarrelCaloHitProperties( const EVENT::CalorimeterHit *
         staveDetElement.nominal().localToWorld( local2, global2 );
         dd4hep::Position normal( global2-global1 );
 
+//#################################### TEST
+
+        // 1. Décoder le cellID pour obtenir le numéro de stave
+        int staveNumber = (pCaloHit->getCellID0() >> 8) & 0x7;  // hit_stave
+        //std::cout << "STAVE NUMBER : " << staveNumber << std::endl;
+
+       /* static const double staveNormals[8][3] = {
+    { -std::sqrt(2)/2,  std::sqrt(2)/2, 0.0 }, // Stave 0
+    { -1.0,                 0.0,                0.0 }, // Stave 1
+    { -std::sqrt(2)/2,  -std::sqrt(2)/2, 0.0 }, // Stave 2
+    {  0.0,                -1.0,                0.0 }, // Stave 3
+    { std::sqrt(2)/2,  -std::sqrt(2)/2, 0.0 }, // Stave 4
+    { +1.0,                 0.0,                0.0 }, // Stave 5
+    { std::sqrt(2)/2,  std::sqrt(2)/2, 0.0 }, // Stave 6
+    {  0.0,                +1.0,                0.0 }  // Stave 7
+}; */
+
+//#################################### TEST
+
         streamlog_out(DEBUG6) << "   detelement: " << staveDetElement.name()
 			      << "   parent: " << staveDetElement.parent().name()
 			      << "   grandparent: " << staveDetElement.parent().parent().name()
@@ -738,7 +768,26 @@ void DDCaloHitCreator::GetBarrelCaloHitProperties( const EVENT::CalorimeterHit *
                               << std::setw(15) << normal.z()
                               << std::endl;
 
-        caloHitParameters.m_cellNormalVector = pandora::CartesianVector( normal.x(), normal.y(), normal.z() );
+        //caloHitParameters.m_cellNormalVector = pandora::CartesianVector( normal.x(), normal.y(), normal.z() );
+
+     //####################################################### TEST
+
+        if (caloHitParameters.m_hitType.Get() == pandora::HCAL && staveNumber >= 0 && staveNumber < 8)
+        {
+            caloHitParameters.m_cellNormalVector = pandora::CartesianVector(staveNormals[staveNumber][0], staveNormals[staveNumber][1], staveNormals[staveNumber][2]);
+        }
+        else
+        {
+            caloHitParameters.m_cellNormalVector = pandora::CartesianVector( normal.x(), normal.y(), normal.z() );
+        }
+
+
+        //caloHitParameters.m_cellNormalVector = pandora::CartesianVector( std::cos(phi), std::sin(phi) , 0.0 );
+
+        //std::cout << "NORMALE : " << std::cos(phi) << ", " << std::sin(phi) << ", " << 0.0 << std::endl;
+        //std::cout << "POSITION XY: " << pCaloHit->getPosition()[0] << ", " << pCaloHit->getPosition()[1] << ", " << 0.0 << std::endl << std::endl;
+
+    //##################################################################""
       } else {
 	const double phi = atan2( pCaloHit->getPosition()[1], pCaloHit->getPosition()[0] );
 
